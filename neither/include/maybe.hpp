@@ -1,42 +1,42 @@
-#ifndef NEITHER_OPTIONAL_HPP
-#define NEITHER_OPTIONAL_HPP
+#ifndef NEITHER_MAYBE_HPP
+#define NEITHER_MAYBE_HPP
 
 namespace neither {
 
 template<class T>
-struct Optional;
+struct Maybe;
 
 template<>
-struct Optional<void> {};
+struct Maybe<void> {};
 
 template<class T>
-struct Optional {
+struct Maybe {
 
   bool const hasValue = 0;
   union {
     T data;
   };
 
-  Optional()
+  Maybe()
     : hasValue{0}
   {}
 
-  Optional(T const& value)
+  Maybe(T const& value)
     : hasValue{1}
     , data{value}
   {}
 
-  Optional(Optional<void>)
+  Maybe(Maybe<void>)
     : hasValue{0} {}
 
-  Optional(Optional<T> const& o)
+  Maybe(Maybe<T> const& o)
     : hasValue{o.hasValue} {
     if(o.hasValue) {
       new (&data) T(o.data);
     }
   }
 
-  ~Optional() {
+  ~Maybe() {
     if(hasValue) {
        data.~T();
     }
@@ -51,10 +51,9 @@ struct Optional {
   constexpr auto map(F const& f)const {
     using ReturnType = decltype(f(data));
     if(!hasValue) {
-      return Optional<ReturnType>();
+      return Maybe<ReturnType>();
     }
-
-    return Optional<ReturnType>(f(data));
+    return Maybe<ReturnType>(f(data));
   }
 
   template<class F>
@@ -69,12 +68,12 @@ struct Optional {
 };
 
 template<class T>
-auto optional(T value) -> Optional<T> {
+auto maybe(T value) -> Maybe<T> {
   return {value};
 }
 
 template<class T=void>
-auto optional() -> Optional<T> {
+auto maybe() -> Maybe<T> {
   return {};
 }
 

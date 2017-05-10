@@ -1,7 +1,7 @@
 #ifndef NEITHER_EITHER_HPP
 #define NEITHER_EITHER_HPP
 
-#include <neither/optional.hpp>
+#include <neither/maybe.hpp>
 #include <type_traits>
 
 namespace neither {
@@ -85,16 +85,16 @@ public:
   }
 
 
-  constexpr auto left()const -> Optional<L> {
+  constexpr auto left()const -> Maybe<L> {
     if(!isLeft)
-      return optional();
-    return optional(getLeft());
+      return maybe();
+    return maybe(getLeft());
   }
 
-  constexpr auto right()const -> Optional<R> {
+  constexpr auto right()const -> Maybe<R> {
     if(isLeft)
-      return optional();
-    return optional(getRight());
+      return maybe();
+    return maybe(getRight());
   }
 
 
