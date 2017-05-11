@@ -8,6 +8,8 @@ buckaroo install loopperfect/neither
 
 ## Introductory Example
 
+
+### Handling Unsafe code
 ```c++
 
 auto unsafe = [] { // a function that throws, sometimes we can't avoid it...
@@ -33,6 +35,26 @@ ASSERT_TRUE(result == 42);
 
 ```
 
+### Using Eithers
+```c++
+Either<std::string, int> compute(int x) {
+  if(x<0) return left("don't pass x<0");
+  return right(x*x);
+}
+
+std::string resultString = compute(5)
+  .rightMap([](auto x){ return x/2.0;}) // success case
+  .join(
+    [](auto errorStr) { return "compute said: " + errorStr; }, // error-case
+    [](auto x) { return "compute said: " + std::to_string(x); } // success-case
+   );
+   
+std::cout << resultString << std::endl;
+
+
+```
+
+### Maybe Example
 ```c++
 
 Maybe<float> compute(float x) {
