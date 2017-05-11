@@ -10,14 +10,14 @@ buckaroo install loopperfect/neither
 
 ```c++
 
-auto evil = [] {
+auto evil = [] { // a function that throws, sometimes we can't avoid it...
   if (true) {
     throw std::runtime_error("error");
   }
   return 1;
 }
 
-auto e = Try<std::exception>(evil);
+Either<std::exception, int> e = Try<std::exception>(evil); // let's lift the exception into the typesystem
 
 e.left()
   .map([](auto const& e) { 
