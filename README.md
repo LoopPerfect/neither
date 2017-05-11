@@ -77,7 +77,10 @@ if(!x.hasValue) {
 ```c++
 
 int sum(int x, int y){ return x+y; }
-auto monadicSum = lift(sum); // Maybe<int> MonadicSum(Maybe<int>, Maybe<int>)
+
+//...
+
+auto monadicSum = lift(sum); // transforms sum to: Maybe<int> MonadicSum(Maybe<int>, Maybe<int>)
 
 ASSERT_TRUE( monadicSum( maybe(5) , maybe(7) ).get(0) == 12 );
 ASSERT_TRUE( monadicSum( maybe(), maybe(1) ).hasValue == false);
