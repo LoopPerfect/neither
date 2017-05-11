@@ -59,6 +59,6 @@ This library requires a C++14 compiler.
 
 buck target is :neither 
 
-Install with buckaroo: `buckaroo install loopperfect/neither`
+Install with [buckaroo](https://buckaroo.pm): `buckaroo install loopperfect/neither`
 
 alternatively with copy&paste: `cp neither/include/*.hpp $InstallPath/include/neither`
