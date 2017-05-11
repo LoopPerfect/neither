@@ -34,10 +34,11 @@ ASSERT_TRUE(result == 42);
 ```
 
 ## Why Eithers? - Learned Lessons About Error handling
+Some useful references: 
 
-Benchmarks: [Mongrel Monads, Dirty, Dirty, Dirty - Niall Douglas [ACCU 2017]](https://youtu.be/XVofgKH-uu4?t=1h)
+ - Benchmarks: [Mongrel Monads, Dirty, Dirty, Dirty - Niall Douglas [ACCU 2017]](https://youtu.be/XVofgKH-uu4?t=1h)
 
-Why out-parameters are bad from the perspective of optimizers:
+ - Why out-parameters are bad from the perspective of optimizers:
 [2013 Keynote: Chandler Carruth: Optimizing the Emergent Structures of C++](https://youtu.be/eR34r7HOU14?t=38m)
 
 ### Summary and Conclusions
