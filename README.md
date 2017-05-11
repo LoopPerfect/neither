@@ -35,7 +35,7 @@ ASSERT_TRUE(result == 42);
 
 ```
 
-### Using Eithers
+### Another Either Example
 ```c++
 Either<std::string, int> compute(int x) {
   if(x<0) return left("don't pass x<0");
