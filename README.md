@@ -53,4 +53,12 @@ https://youtu.be/eR34r7HOU14?t=38m
   - handling exceptions is errorprone and requires documentation
   - => encode errors in the types enforces propper handling by the API consumer
 
+## Instalation
 
+This library requires a C++14 compiler.
+
+buck target is :neither 
+
+Install with buckaroo: `buckaroo install loopperfect/neither`
+
+alternatively with copy&paste: `cp neither/include/*.hpp $InstallPath/include/neither`
