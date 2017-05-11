@@ -6,103 +6,131 @@
 
 namespace neither {
 
-template <class T> constexpr T max(T x, T y) { return x > y ? x : y; }
+template<class T>
+constexpr T max(T x, T y) {
+  return x>y ? x : y;
+}
 
-template <class T> struct Left { T const value; };
+template<class T>
+struct Left {
+  T const value;
+};
 
-template <class T> constexpr Left<T> left(T const &x) { return {x}; }
+template<class T>
+constexpr Left<T> left(T const& x) {
+  return {x};
+}
 
-template <class T> struct Right { T const value; };
+template<class T>
+struct Right {
+  T const value;
+};
 
-template <class T> constexpr Right<T> right(T const &x) { return {x}; }
+template<class T>
+constexpr Right<T> right(T const& x) {
+  return {x};
+}
 
-template <class L, class R> struct Either {
-private:
-  L const &getLeft() const { return *reinterpret_cast<L const *>(data); }
 
-  R const &getRight() const { return *reinterpret_cast<R const *>(data); }
+template<class L, class R>
+struct Either {
 
-  L &getLeft() { return *reinterpret_cast<L *>(data); }
-
-  R &getRight() { return *reinterpret_cast<R *>(data); }
+  union {
+    L leftValue;
+    R rightValue;
+  };
 
   bool const isLeft = 0;
-  char data[max(sizeof(L), sizeof(R))];
 
-public:
-  Either(Left<L> const &l) : isLeft(1) { new (data) L(l.value); }
+  constexpr Either( Left<L> const& l )
+    : leftValue{l.value}
+    , isLeft(1)
+  {}
 
-  Either(Right<R> const &r) : isLeft(0) { new (data) R(r.value); }
+  constexpr Either( Right<R> const& r )
+    : rightValue{r.value}
+    , isLeft(0)
+  {}
 
-  Either(Either<L, R> const &e) : isLeft(e.isLeft) {
-    if (isLeft) {
-      new (data) L(e.getLeft());
+  constexpr Either( Either<L, R> const& e )
+    : isLeft(e.isLeft) {
+    if(isLeft) {
+      leftValue = e.leftValue;
     } else {
-      new (data) R(e.getRight());
+      rightValue = e.rightValue;
     }
   }
 
   ~Either() {
-    if (isLeft) {
-      getLeft().~L();
+    if(isLeft) {
+      leftValue.~L();
     } else {
-      getRight().~R();
+      rightValue.~R();
     }
   }
 
+
   constexpr auto left() const -> Maybe<L> {
-    if (!isLeft)
+    if(!isLeft)
       return maybe();
-    return maybe(getLeft());
+    return maybe(leftValue);
   }
 
   constexpr auto right() const -> Maybe<R> {
-    if (isLeft)
+    if(isLeft)
       return maybe();
-    return maybe(getRight());
+    return maybe(rightValue);
   }
 
-  static constexpr auto leftOf(L const &l) {
-    return Either<L, R>{neither::left(l)};
+
+  static constexpr auto leftOf( L const& l ) {
+    return Either<L, R>{ neither::left(l) };
   }
 
-  static constexpr auto rightOf(R const &r) {
-    return Either<L, R>{neither::right(r)};
+  static constexpr auto rightOf( R const& r ) {
+    return Either<L, R>{ neither::right(r) };
   }
 
-  template <class L2 = L, class R2 = R>
-  constexpr auto join() const -> std::common_type_t<L2, R2> {
-    return isLeft ? getLeft() : getRight();
+
+  template<
+    class L2 = L,
+    class R2 = R>
+    constexpr auto join() const
+    -> std::common_type_t<L2, R2> {
+    return isLeft?  leftValue : rightValue;
   }
 
-  template <class LeftF, class RightF>
-  constexpr auto join(LeftF const &leftCase, RightF const &rightCase) const
-      -> decltype(isLeft ? leftCase(getLeft()) : rightCase(getRight())) {
-    return isLeft ? leftCase(getLeft()) : rightCase(getRight());
+  template<class LeftF, class RightF>
+  constexpr auto join(LeftF const& leftCase, RightF const&  rightCase) const
+    -> decltype( isLeft? leftCase( leftValue ) : rightCase( rightValue ) ) {
+    return isLeft? leftCase( leftValue ) : rightCase( rightValue );
   }
 
-  template <class F>
-  constexpr auto leftMap(F const &leftCase) const
-      -> Either<decltype(leftCase(getLeft())), R> {
-    using NextEither = Either<decltype(leftCase(getLeft())), R>;
-    return isLeft ? NextEither::leftOf(leftCase(getLeft()))
-                  : NextEither::rightOf(getRight());
+  template<class F>
+  constexpr auto leftMap(F const& leftCase) const -> Either<decltype(leftCase( leftValue )), R> {
+    using NextEither = Either<decltype(leftCase(leftValue)), R>;
+    return isLeft ?
+      NextEither::leftOf( leftCase( leftValue ) ) :
+      NextEither::rightOf( rightValue );
   }
 
-  template <class F>
-  constexpr auto rightMap(F const &rightCase) const
-      -> Either<L, decltype(rightCase(getRight()))> {
-    using NextEither = Either<L, decltype(rightCase(getRight()))>;
-    return isLeft ? NextEither::leftOf(getLeft())
-                  : NextEither::rightOf(rightCase(getRight()));
+  template<class F>
+  constexpr auto rightMap(F const& rightCase) const -> Either<L, decltype(rightCase(rightValue))> {
+    using NextEither = Either<L, decltype(rightCase(rightValue))>;
+    return isLeft ?
+      NextEither::leftOf( leftValue ) :
+      NextEither::rightOf( rightCase( rightValue ) );
   }
 
-  template <class LeftCase, class RightCase>
-  constexpr auto rightMap(LeftCase const &leftCase,
-                          RightCase const &rightCase) const {
-    return (*this).leftMap(leftCase).rightMap(rightCase);
+  template<class LeftCase, class RightCase>
+  constexpr auto rightMap(LeftCase const& leftCase, RightCase const& rightCase) const {
+    return (*this)
+      .leftMap(leftCase)
+      .rightMap(rightCase);
   }
+
 };
+
 }
 
 #endif
