@@ -129,6 +129,8 @@ struct Either {
       .rightMap(rightCase);
   }
 
+  constexpr operator bool()const { return !isLeft; }
+
 };
 
 }

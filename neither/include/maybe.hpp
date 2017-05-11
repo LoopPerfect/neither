@@ -9,52 +9,54 @@ template <> struct Maybe<void> {};
 
 template <class T> struct Maybe {
 
-  bool const hasValue = 0;
   union {
-    T data;
+    T value;
   };
+  bool const hasValue = 0;
 
-  Maybe() : hasValue{0} {}
+  constexpr Maybe() : hasValue{0} {}
 
-  Maybe(T const &value) : hasValue{1}, data{value} {}
+  constexpr Maybe(T const &value) :  value{value}, hasValue{1} {}
 
-  Maybe(Maybe<void>) : hasValue{0} {}
+  constexpr Maybe(Maybe<void>) : hasValue{0} {}
 
-  Maybe(Maybe<T> const &o) : hasValue{o.hasValue} {
+  constexpr Maybe(Maybe<T> const &o) : hasValue{o.hasValue} {
     if (o.hasValue) {
-      new (&data) T(o.data);
+      value = o.value;
     }
   }
 
   ~Maybe() {
     if (hasValue) {
-      data.~T();
+      value.~T();
     }
   }
 
   constexpr T get(T defaultValue) {
     if (hasValue)
-      return data;
+      return value;
     return defaultValue;
   }
 
   template <class F> constexpr auto map(F const &f) const {
-    using ReturnType = decltype(f(data));
+    using ReturnType = decltype(f(value));
     if (!hasValue) {
       return Maybe<ReturnType>();
     }
-    return Maybe<ReturnType>(f(data));
+    return Maybe<ReturnType>(f(value));
   }
 
   template <class F>
-  constexpr auto flatMap(F const &f) const -> decltype(f(data)) {
-    using ReturnType = decltype(f(data));
+  constexpr auto flatMap(F const &f) const -> decltype(f(value)) {
+    using ReturnType = decltype(f(value));
     if (!hasValue) {
       return ReturnType();
     }
 
-    return f(data);
+    return f(value);
   }
+
+  constexpr operator bool()const { return hasValue; }
 };
 
 template <class T> auto maybe(T value) -> Maybe<T> { return {value}; }
