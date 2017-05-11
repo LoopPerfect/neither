@@ -10,14 +10,14 @@ buckaroo install loopperfect/neither
 
 ```c++
 
-auto evil = [] { // a function that throws, sometimes we can't avoid it...
+auto unsafe = [] { // a function that throws, sometimes we can't avoid it...
   if (true) {
     throw std::runtime_error("error");
   }
   return 1;
 }
 
-Either<std::exception, int> e = Try<std::exception>(evil); // let's lift the exception into the typesystem
+Either<std::exception, int> e = Try<std::exception>(unsafe); // let's lift the exception into the typesystem
 
 e.left()
   .map([](auto const& e) { 
@@ -31,6 +31,23 @@ int result = e
   
 ASSERT_TRUE(result == 42);
 
+```
+
+```c++
+
+Maybe<float> compute(float x) {
+  if(x<0) return {};
+  return {sqrtf(x)};
+}
+
+Maybe<float> x = compute(-4)
+ .map([](auto x){ return x*x;})
+ .map([](auto x){ return x+1 });
+ 
+if(!x.hasValue) {
+  std::cerr << "error occured" << std::endl;
+}
+ 
 ```
 
 ## Why Eithers? - Learned Lessons About Error handling
