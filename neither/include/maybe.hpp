@@ -22,7 +22,7 @@ template <class T> struct Maybe {
 
   constexpr Maybe(Maybe<T> const &o) : hasValue{o.hasValue} {
     if (o.hasValue) {
-      value = o.value;
+      new (&value)T(o.value);
     }
   }
 

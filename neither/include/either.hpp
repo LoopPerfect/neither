@@ -55,9 +55,9 @@ struct Either {
   constexpr Either( Either<L, R> const& e )
     : isLeft(e.isLeft) {
     if(isLeft) {
-      leftValue = e.leftValue;
+      new (&leftValue)L(e.leftValue);
     } else {
-      rightValue = e.rightValue;
+      new (&rightValue)R(e.rightValue);
     }
   }
 
