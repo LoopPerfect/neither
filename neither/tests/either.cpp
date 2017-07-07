@@ -6,6 +6,7 @@
 using namespace neither;
 using namespace std::literals::string_literals;
 using IntOrStr = Either<int, std::string>;
+using StrOrInt = Either<std::string, int>;
 using StrOrStr = Either<std::string, std::string>;
 
 
@@ -22,7 +23,7 @@ TEST(neither, join_left) {
 
 TEST(neither, join_right) {
 
-  auto s = IntOrStr::rightOf("ads");
+  auto s = IntOrStr::rightOf("foo");
 
   auto i2 = s.leftMap([](auto x) { return x * 2; })
                 .rightMap([](auto x) { return x.size(); })
@@ -34,7 +35,6 @@ TEST(neither, join_right) {
 
 
 TEST(neither, leftFlatMap) {
-
   auto s = IntOrStr::leftOf(1);
 
   auto s2 = s.rightMap([](auto) -> std::string { return "b"; })
@@ -42,4 +42,14 @@ TEST(neither, leftFlatMap) {
     .join();
 
   ASSERT_TRUE(s2[0] == 'a');
+}
+
+TEST(neither, rightFlatMap) {
+  auto s = StrOrStr::rightOf("a");
+
+  auto i = s.rightFlatMap([](auto x) { return StrOrInt::rightOf(2); })
+    .leftMap([](auto) { return 1; })
+    .join();
+
+  ASSERT_TRUE(i == 2);
 }

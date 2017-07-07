@@ -159,8 +159,8 @@ struct Either {
 
   template<class LeftCase>
   constexpr auto leftFlatMap(LeftCase const& leftCase) const
-    -> decltype( ensureEitherRight( leftCase( leftValue ), rightValue)  ) {
-    using NextEither = decltype(ensureEitherRight( leftCase( leftValue ), rightValue));
+    -> decltype( ensureEitherRight(leftCase(leftValue), rightValue)) {
+    using NextEither = decltype(ensureEitherRight(leftCase(leftValue), rightValue));
 
     if (!*this) {
       return leftCase( leftValue );
@@ -171,8 +171,8 @@ struct Either {
 
   template<class RightCase>
   constexpr auto rightFlatMap(RightCase const& rightCase) const
-    -> decltype( ensureEitherLeft(rightCase(rightValue), leftValue) ) {
-    using NextEither = ensureEitherRight( rightCase( rightValue ), rightValue);
+    -> decltype( ensureEitherLeft(rightCase(rightValue), leftValue)) {
+    using NextEither = decltype(ensureEitherLeft(rightCase(rightValue), leftValue));
 
     if (*this) {
       return rightCase( rightValue );
