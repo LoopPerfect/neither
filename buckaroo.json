@@ -1,5 +1,5 @@
 {
-  "name": "either",
+  "name": "neither",
   "dependencies": {
     "google/gtest": "1.8.0"
   }

@@ -6,6 +6,8 @@
 using namespace neither;
 using namespace std::literals::string_literals;
 using IntOrStr = Either<int, std::string>;
+using StrOrStr = Either<std::string, std::string>;
+
 
 TEST(neither, join_left) {
 
@@ -28,4 +30,16 @@ TEST(neither, join_right) {
                 .join();
 
   ASSERT_TRUE(i2 == 42);
+}
+
+
+TEST(neither, leftFlatMap) {
+
+  auto s = IntOrStr::leftOf(1);
+
+  auto s2 = s.rightMap([](auto) -> std::string { return "b"; })
+    .leftFlatMap([](auto x) { return StrOrStr::leftOf("a"); })
+    .join();
+
+  ASSERT_TRUE(s2[0] == 'a');
 }

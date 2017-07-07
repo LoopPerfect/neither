@@ -33,6 +33,32 @@ constexpr Right<T> right(T const& x) {
 
 
 template<class L, class R>
+struct Either;
+
+
+template<class L, class R>
+auto ensureEither ( Either<L,R> const& e) -> Either<L,R> {
+  return e;
+}
+
+template<class L, class R>
+auto ensureEitherRight ( Either<L,R> const& e, R) -> Either<L, R> {
+  return e;
+}
+
+
+template<class L, class R>
+auto ensureEitherLeft ( Either<L,R> const& e, L) -> Either<L, R> {
+  return e;
+}
+
+
+
+
+
+
+
+template<class L, class R>
 struct Either {
 
   union {
@@ -68,7 +94,6 @@ struct Either {
       rightValue.~R();
     }
   }
-
 
   constexpr auto left() const -> Maybe<L> {
     if(!isLeft)
@@ -123,10 +148,37 @@ struct Either {
   }
 
   template<class LeftCase, class RightCase>
-  constexpr auto rightMap(LeftCase const& leftCase, RightCase const& rightCase) const {
+  constexpr auto rightMap(LeftCase const& leftCase, RightCase const& rightCase) const
+    -> decltype((*this)
+      .leftMap(leftCase)
+      .rightMap(rightCase)) {
     return (*this)
       .leftMap(leftCase)
       .rightMap(rightCase);
+  }
+
+  template<class LeftCase>
+  constexpr auto leftFlatMap(LeftCase const& leftCase) const
+    -> decltype( ensureEitherRight( leftCase( leftValue ), rightValue)  ) {
+    using NextEither = decltype(ensureEitherRight( leftCase( leftValue ), rightValue));
+
+    if (!*this) {
+      return leftCase( leftValue );
+    }
+
+    return NextEither::rightOf(rightValue);
+  }
+
+  template<class RightCase>
+  constexpr auto rightFlatMap(RightCase const& rightCase) const
+    -> decltype( ensureEitherLeft(rightCase(rightValue), leftValue) ) {
+    using NextEither = ensureEitherRight( rightCase( rightValue ), rightValue);
+
+    if (*this) {
+      return rightCase( rightValue );
+    }
+
+    return NextEither::leftOf(leftValue);
   }
 
   constexpr operator bool()const { return !isLeft; }

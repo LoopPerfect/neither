@@ -1,2 +1,2 @@
 [cxx]
-  gtest_dep = google-gtest//:gtest
+  gtest_dep = google.gtest//:gtest
