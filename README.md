@@ -51,6 +51,28 @@ std::string resultString = compute(5)
    
 std::cout << resultString << std::endl;
 
+```
+
+### Composition of Eithers
+
+```c++
+
+neither::Either<my_error_t, int> f1();
+neither::Either<my_error_t, float> f2();
+
+void compose() {
+    auto value = f1()
+        .rightFlatMap([](const struct_a& v){
+            return f2();
+        })
+        .rightMap([](const struct_b& v){
+            return 5;
+        })
+        .leftMap([](const auto& my_error){
+            return 6;
+        }).join();
+    // value should be either 5 or 6
+}
 
 ```
 
