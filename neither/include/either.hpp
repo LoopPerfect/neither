@@ -85,11 +85,6 @@ auto ensureEitherLeft ( Either<L,R>&& e, L&&  ) -> Either<L, R> {
 }
 
 
-
-
-
-
-
 template<class L, class R>
 struct Either {
 
@@ -115,7 +110,6 @@ struct Either {
     , isLeft(1)
   {}
 
-
   Either( Right<R> && r )
     : rightValue{std::move(r.value)}
     , isLeft(0)
@@ -130,7 +124,6 @@ struct Either {
     }
   }
 
-
   Either( Either<L, R>&& e )
     : isLeft(e.isLeft) {
     if (isLeft) {
@@ -139,7 +132,6 @@ struct Either {
       new (&rightValue)R(std::move(e.rightValue));
     }
   }
-
 
   ~Either() {
     if (isLeft) {
@@ -288,9 +280,7 @@ struct Either {
     return NextEither::leftOf(std::move(leftValue));
   }
 
-
   constexpr operator bool()const { return !isLeft; }
-
 };
 
 }

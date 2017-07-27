@@ -1,6 +1,8 @@
 #ifndef NEITHER_MAYBE_HPP
 #define NEITHER_MAYBE_HPP
 
+#include <memory>
+
 namespace neither {
 
 template <class T> struct Maybe;
@@ -16,7 +18,8 @@ template <class T> struct Maybe {
 
   constexpr Maybe() : hasValue{0} {}
 
-  constexpr Maybe(T const &value) :  value{value}, hasValue{1} {}
+  constexpr Maybe(T const& value) :  value{value}, hasValue{1} {}
+  constexpr Maybe(T&& value) :  value{std::move(value)}, hasValue{1} {}
 
   constexpr Maybe(Maybe<void>) : hasValue{0} {}
 
