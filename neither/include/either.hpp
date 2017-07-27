@@ -1,6 +1,7 @@
 #ifndef NEITHER_EITHER_HPP
 #define NEITHER_EITHER_HPP
 
+#include <neither/traits.hpp>
 #include <neither/maybe.hpp>
 #include <memory>
 #include <type_traits>
@@ -44,45 +45,6 @@ Right<T> right(T&& x) {
 }
 
 
-template<class L, class R>
-struct Either;
-
-template<class L,class...Xs>
-auto isCopyable (L l, Xs...) -> L {
-  return l;
-}
-
-template<class L, class R>
-auto ensureEither ( Either<L,R> const& e) -> Either<L,R> {
-  return e;
-}
-
-template<class L, class R>
-auto ensureEither ( Either<L,R> && e) -> Either<L,R> {
-  return e;
-}
-
-template<class L, class R>
-auto ensureEitherRight ( Either<L,R> const& e, R) -> Either<L, R> {
-  return e;
-}
-
-
-template<class L, class R>
-auto ensureEitherRight ( Either<L,R>&& e, R&&) -> Either<L, R> {
-  return e;
-}
-
-
-template<class L, class R>
-auto ensureEitherLeft ( Either<L,R> const& e, L) -> Either<L, R> {
-  return e;
-}
-
-template<class L, class R>
-auto ensureEitherLeft ( Either<L,R>&& e, L&&  ) -> Either<L, R> {
-  return e;
-}
 
 
 template<class L, class R>
