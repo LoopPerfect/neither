@@ -2,6 +2,7 @@
 #define NEITHER_EITHER_HPP
 
 #include <neither/maybe.hpp>
+#include <memory>
 #include <type_traits>
 
 namespace neither {
@@ -13,12 +14,17 @@ constexpr T max(T x, T y) {
 
 template<class T>
 struct Left {
-  T const value;
+  T value;
 };
 
 template<class T>
 constexpr Left<T> left(T const& x) {
   return {x};
+}
+
+template<class T>
+Left<T> left(T&& x) {
+  return {std::move(x)};
 }
 
 template<class T>
@@ -32,6 +38,12 @@ constexpr Right<T> right(T const& x) {
 }
 
 
+template<class T>
+Right<T> right(T&& x) {
+  return {std::move(x)};
+}
+
+
 template<class L, class R>
 struct Either;
 
@@ -42,13 +54,31 @@ auto ensureEither ( Either<L,R> const& e) -> Either<L,R> {
 }
 
 template<class L, class R>
+auto ensureEither ( Either<L,R> && e) -> Either<L,R> {
+  return e;
+}
+
+template<class L, class R>
 auto ensureEitherRight ( Either<L,R> const& e, R) -> Either<L, R> {
   return e;
 }
 
 
 template<class L, class R>
+auto ensureEitherRight ( Either<L,R>&& e, R) -> Either<L, R> {
+  return e;
+}
+
+
+template<class L, class R>
 auto ensureEitherLeft ( Either<L,R> const& e, L) -> Either<L, R> {
+  return e;
+}
+
+
+
+template<class L, class R>
+auto ensureEitherLeft ( Either<L,R>&& e, L) -> Either<L, R> {
   return e;
 }
 
@@ -80,15 +110,35 @@ struct Either {
 
   constexpr Either( Either<L, R> const& e )
     : isLeft(e.isLeft) {
-    if(isLeft) {
+    if (isLeft) {
       new (&leftValue)L(e.leftValue);
     } else {
       new (&rightValue)R(e.rightValue);
     }
   }
 
+
+  Either( Either<L, R>&& e )
+    : isLeft(e.isLeft) {
+    if (isLeft) {
+      new (&leftValue)L(std::move(e.leftValue));
+    } else {
+      new (&rightValue)R(std::move(e.rightValue));
+    }
+  }
+
+  Either( Left<L> && l )
+    : leftValue{std::move(l.value)}
+    , isLeft(1)
+  {}
+
+  Either( Right<R> && r )
+    : rightValue{std::move(r.value)}
+    , isLeft(0)
+  {}
+
   ~Either() {
-    if(isLeft) {
+    if (isLeft) {
       leftValue.~L();
     } else {
       rightValue.~R();
@@ -96,7 +146,7 @@ struct Either {
   }
 
   constexpr auto left() const -> Maybe<L> {
-    if(!isLeft)
+    if (!isLeft)
       return maybe();
     return maybe(leftValue);
   }
@@ -114,6 +164,15 @@ struct Either {
 
   static constexpr auto rightOf( R const& r ) {
     return Either<L, R>{ neither::right(r) };
+  }
+
+
+  static constexpr auto leftOf( L && l ) {
+    return Either<L, R>{ neither::left(std::move(l)) };
+  }
+
+  static constexpr auto rightOf( R && r ) {
+    return Either<L, R>{ neither::right(std::move(r)) };
   }
 
 

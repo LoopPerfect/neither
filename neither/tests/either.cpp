@@ -2,6 +2,7 @@
 #include <iostream>
 #include <neither/either.hpp>
 #include <string>
+#include <memory>
 
 using namespace neither;
 using namespace std::literals::string_literals;
@@ -53,3 +54,37 @@ TEST(neither, rightFlatMap) {
 
   ASSERT_TRUE(i == 2);
 }
+
+TEST(neither, leftMapMove) {
+   neither::Either<int, std::string> e = neither::left(1);
+   e.leftMap([](auto x) {
+     return x;
+   }).leftMap([](auto&& x) {
+     return 2;
+   });
+}
+
+TEST(neither, rightMapMove) {
+   neither::Either<std::string, int> e = neither::right(1);
+   e.rightMap([](auto x) {
+     return x;
+   }).rightMap([](auto&& x) {
+     return 2;
+   };
+}
+
+TEST(neither, constructFromUnique) {
+   neither::Either<std::unique_ptr<int>, std::string> e =
+     neither::left(std::make_unique<int>(1));
+}
+
+
+TEST(neither, mapToUnique) {
+   neither::Either<std::unique_ptr<int>, std::string> e =
+     neither::left(std::make_unique<int>(1));
+
+   e.leftFlatMap([](auto l){ return
+       neither::Either<std::unique_ptr<int>, std::string>::leftOf(l);
+  });
+}
+
