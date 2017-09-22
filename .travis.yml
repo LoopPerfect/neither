@@ -10,7 +10,7 @@ addons:
       - gcc-5
 
 before_install:
-  - sudo cd /usr/bin/ && rm g++ && ln -s g++-5 g++
+  - cd /usr/bin/ && sudo rm g++ && sudo ln -s g++-5 g++
   - g++ --version
   - sudo apt-get install default-jdk
   - wget -O buck.deb https://github.com/facebook/buck/releases/download/v2017.09.04.02/buck-2017.09.04.02_all.deb
