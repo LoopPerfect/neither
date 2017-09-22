@@ -9,7 +9,6 @@ addons:
     packages:
       - watchman
       - gcc-5
-      - clang-4.0
 
 matrix:
   include:
@@ -17,14 +16,8 @@ matrix:
       addons:
         apt:
           packages:
-            - g++-5
-      env: COMPILER=g++-5
-    - compiler: clang
-      addons:
-        apt:
-          packages:
-            - clang-4.0
-      env: COMPILER=clang++-4.0
+            - gcc-5
+      env: COMPILER=gcc-5
 
 before_install:
   - sudo apt-get install default-jdk
