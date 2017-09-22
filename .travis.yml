@@ -1,0 +1,16 @@
+language: cpp
+sudo: true
+dist: trusty
+
+before_install:
+  - sudo apt-get install default-jdk
+  - wget -O buck.deb https://github.com/facebook/buck/releases/download/v2017.09.04.02/buck-2017.09.04.02_all.deb
+  - dpkg -i buck.deb
+  - wget -O buckaroo.deb https://github.com/LoopPerfect/buckaroo/releases/download/v1.3.1/buckaroo_1.3.1_amd64.deb
+  - dpkg -i buckaroo.deb
+
+script:
+  - buckaroo install
+  - buck build //:neither
+  - buck build //:test
+  - buck test
