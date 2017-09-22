@@ -8,19 +8,12 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - watchman
-
-matrix:
-  include:
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - gcc-5
-      env: COMPILER=gcc-5
+      - gcc-5
+      - g++-5
 
 before_install:
+  - sudo rm /usr/bin/g++
+  - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
   - sudo apt-get install default-jdk
   - wget -O buck.deb https://github.com/facebook/buck/releases/download/v2017.09.04.02/buck-2017.09.04.02_all.deb
   - sudo dpkg -i buck.deb
