@@ -7,10 +7,24 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
+      - watchman
       - gcc-5
+      - clang-4.0
 
-compiler:
-  - gcc-5
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
+    - compiler: clang
+      addons:
+        apt:
+          packages:
+            - clang-4.0
+      env: COMPILER=clang++-4.0
 
 before_install:
   - sudo apt-get install default-jdk
