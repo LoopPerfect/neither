@@ -1,10 +1,11 @@
 #ifndef NEITHER_EITHER_HPP
 #define NEITHER_EITHER_HPP
 
-#include <neither/traits.hpp>
-#include <neither/maybe.hpp>
 #include <memory>
 #include <type_traits>
+
+#include <neither/traits.hpp>
+#include <neither/maybe.hpp>
 
 namespace neither {
 
@@ -25,7 +26,7 @@ constexpr Left<T> left(T const& x) {
 
 template<class T>
 Left<T> left(T&& x) {
-  return {std::move(x)};
+  return { std::move(x) };
 }
 
 template<class T>
@@ -41,11 +42,8 @@ constexpr Right<T> right(T const& x) {
 
 template<class T>
 Right<T> right(T&& x) {
-  return {std::move(x)};
+  return { std::move(x) };
 }
-
-
-
 
 template<class L, class R>
 struct Either {
@@ -104,17 +102,16 @@ struct Either {
   }
 
   constexpr auto left() const -> Maybe<L> {
-    if (!isLeft)
-      return maybe();
-    return maybe(leftValue);
+    return isLeft ?
+      maybe(leftValue) :
+      maybe();
   }
 
   constexpr auto right() const -> Maybe<R> {
-    if(isLeft)
-      return maybe();
-    return maybe(rightValue);
+    return isLeft ?
+      maybe() :
+      maybe(rightValue);
   }
-
 
   static constexpr auto leftOf( L const& l ) {
     return Either<L, R>{ neither::left(l) };
@@ -124,7 +121,6 @@ struct Either {
     return Either<L, R>{ neither::right(r) };
   }
 
-
   static constexpr auto leftOf( L && l ) {
     return Either<L, R>{ neither::left(std::move(l)) };
   }
@@ -132,7 +128,6 @@ struct Either {
   static constexpr auto rightOf( R && r ) {
     return Either<L, R>{ neither::right(std::move(r)) };
   }
-
 
   template<
     class L2 = L,
@@ -142,26 +137,25 @@ struct Either {
       isCopyable((L2)leftValue, (R2)rightValue),
       std::declval<std::common_type_t<L2, R2>>()
     ) {
-    return isLeft?  leftValue : rightValue;
+    return isLeft ? leftValue : rightValue;
   }
-
 
   template<
     class L2 = L,
     class R2 = R>
     auto join()&&
     -> std::common_type_t<L2, R2> {
-    return isLeft? std::move(leftValue) : std::move(rightValue);
+    return isLeft ? std::move(leftValue) : std::move(rightValue);
   }
 
   template<class LeftF, class RightF>
   constexpr auto join(LeftF const& leftCase, RightF const&  rightCase) const
     -> decltype( isLeft? leftCase( leftValue ) : rightCase( rightValue ) ) {
-    return isLeft? leftCase( leftValue ) : rightCase( rightValue );
+    return isLeft ? leftCase( leftValue ) : rightCase( rightValue );
   }
 
   template<class F, class L2=L, class R2=R>
-  constexpr auto leftMap(F const& leftCase) const& 
+  constexpr auto leftMap(F const& leftCase) const&
   -> Either<decltype(leftCase( isCopyable((L2)leftValue, (R2)rightValue) )), R2> {
     using NextEither = Either<decltype(leftCase(leftValue)), R2>;
     return isLeft ?
@@ -205,7 +199,7 @@ struct Either {
     return NextEither::rightOf(rightValue);
   }
 
-  template<class RightCase, class L2=L, class R2=R>
+  template<class RightCase, class L2 = L, class R2 = R>
   constexpr auto rightFlatMap(RightCase const& rightCase) const&
     -> decltype( ensureEitherLeft(rightCase(isCopyable((R2)rightValue)), isCopyable((L2)leftValue))) {
     using NextEither = decltype(rightCase(rightValue));
@@ -217,9 +211,7 @@ struct Either {
     return NextEither::leftOf(leftValue);
   }
 
-
-
-  template<class LeftCase, class L2=L, class R2=R>
+  template<class LeftCase, class L2 = L, class R2 = R>
   auto leftFlatMap(LeftCase const& leftCase)&&
     -> decltype( ensureEitherRight(leftCase(std::move(leftValue)), std::move(rightValue))) {
     using NextEither = decltype(leftCase(std::move(leftValue)));
@@ -245,6 +237,25 @@ struct Either {
 
   constexpr operator bool()const { return !isLeft; }
 };
+
+template <typename L, typename R>
+bool operator == (Either<L, R> const& a, Either<L, R> const& b) {
+  if (a.isLeft) {
+    if (b.isLeft) {
+      return a.left() == b.left();
+    }
+  } else {
+    if (!b.isLeft) {
+      return a.right() == b.right();
+    }
+  }
+  return false;
+}
+
+template <typename L, typename R>
+bool operator != (Either<L, R> const& a, Either<L, R> const& b) {
+  return !(a == b);
+}
 
 }
 

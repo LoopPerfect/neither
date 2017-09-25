@@ -1,17 +1,18 @@
-#include <gtest/gtest.h>
 #include <iostream>
-#include <neither/either.hpp>
 #include <string>
 #include <memory>
 
+#include <gtest/gtest.h>
+#include <neither/either.hpp>
+
 using namespace neither;
 using namespace std::literals::string_literals;
+
 using IntOrStr = Either<int, std::string>;
 using StrOrInt = Either<std::string, int>;
 using StrOrStr = Either<std::string, std::string>;
 
-
-TEST(neither, join_left) {
+TEST(neither, either_join_left) {
 
   auto i = IntOrStr::leftOf(21);
 
@@ -22,7 +23,7 @@ TEST(neither, join_left) {
   ASSERT_TRUE(i2 == 42);
 }
 
-TEST(neither, join_right) {
+TEST(neither, either_join_right) {
 
   auto s = IntOrStr::rightOf("foo");
 
@@ -35,7 +36,7 @@ TEST(neither, join_right) {
 }
 
 
-TEST(neither, leftFlatMap) {
+TEST(neither, either_leftFlatMap) {
   auto s = IntOrStr::leftOf(1);
 
   auto s2 = s.rightMap([](auto) -> std::string { return "b"; })
@@ -45,7 +46,7 @@ TEST(neither, leftFlatMap) {
   ASSERT_TRUE(s2[0] == 'a');
 }
 
-TEST(neither, rightFlatMap) {
+TEST(neither, either_rightFlatMap) {
   auto s = StrOrStr::rightOf("a");
 
   auto i = s.rightFlatMap([](auto x) { return StrOrInt::rightOf(2); })
@@ -55,7 +56,7 @@ TEST(neither, rightFlatMap) {
   ASSERT_TRUE(i == 2);
 }
 
-TEST(neither, leftMapMove) {
+TEST(neither, either_leftMapMove) {
    neither::Either<int, std::string> e = neither::left(1);
    e.leftMap([](auto x) {
      return x;
@@ -64,7 +65,7 @@ TEST(neither, leftMapMove) {
    });
 }
 
-TEST(neither, rightMapMove) {
+TEST(neither, either_rightMapMove) {
    neither::Either<std::string, int> e = neither::right(1);
    e.rightMap([](auto x) {
      return x;
@@ -73,21 +74,21 @@ TEST(neither, rightMapMove) {
    });
 }
 
-TEST(neither, constructFromUnique) {
+TEST(neither, either_constructFromUnique) {
    neither::Either<std::unique_ptr<int>, std::string> e =
      neither::left(std::make_unique<int>(1));
 }
 
-TEST(neither, flatMapToUnique) {
+TEST(neither, either_flatMapToUnique) {
   neither::Either<int, int> e = left(1);
 
-  auto i = e.leftFlatMap([](auto x){ return
-    Either<std::unique_ptr<int>, int>::leftOf(
+  auto i = e.leftFlatMap([](auto x) {
+    return Either<std::unique_ptr<int>, int>::leftOf(
       std::make_unique<int>(x));
-  }).leftFlatMap([](auto&& x){ return
-    Either<std::unique_ptr<int>, int>::leftOf(
+  }).leftFlatMap([](auto&& x) {
+    return Either<std::unique_ptr<int>, int>::leftOf(
       std::make_unique<int>(1));
-  }).leftMap([](auto&& x){
+  }).leftMap([](auto&& x) {
     return *x;
   }).join();
 
@@ -95,19 +96,40 @@ TEST(neither, flatMapToUnique) {
 }
 
 
-TEST(neither, mapToUnique) {
+TEST(neither, either_mapToUnique) {
   neither::Either<int, int> e = left(1);
 
-  auto u = e.leftFlatMap([](auto x){ return
+  auto u = e.leftFlatMap([](auto x) { return
     Either<std::unique_ptr<int>, int>::leftOf(
       std::make_unique<int>(x));
-  }).leftMap([](auto&& x){
+  }).leftMap([](auto&& x) {
     return std::move(x);
-  }).rightFlatMap([](auto&& x){ return
-    Either<std::unique_ptr<int>, std::unique_ptr<int>>::rightOf(
+  }).rightFlatMap([](auto&& x) {
+    return Either<std::unique_ptr<int>, std::unique_ptr<int>>::rightOf(
       std::make_unique<int>(2));
   }).join();
 
   ASSERT_TRUE(*u == 1);
 }
 
+TEST(neither, either_comparison) {
+
+  auto a = IntOrStr::leftOf(123);
+  auto b = IntOrStr::leftOf(123);
+
+  EXPECT_TRUE(a == b);
+
+  auto c = IntOrStr::rightOf("abc");
+  auto d = IntOrStr::rightOf("abc");
+  auto e = IntOrStr::rightOf("def");
+
+  EXPECT_TRUE(c == d);
+
+  EXPECT_TRUE(a != c);
+  EXPECT_TRUE(a != d);
+  EXPECT_TRUE(b != c);
+  EXPECT_TRUE(b != d);
+
+  EXPECT_TRUE(c != e);
+  EXPECT_TRUE(d != e);
+}
