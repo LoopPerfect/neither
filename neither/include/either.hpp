@@ -139,7 +139,7 @@ struct Either {
     class R2 = R>
     constexpr auto join() const
     -> decltype(
-      isCopyable(leftValue, rightValue),
+      isCopyable((L2)leftValue, (R2)rightValue),
       std::declval<std::common_type_t<L2, R2>>()
     ) {
     return isLeft?  leftValue : rightValue;
@@ -160,41 +160,42 @@ struct Either {
     return isLeft? leftCase( leftValue ) : rightCase( rightValue );
   }
 
-  template<class F>
-  constexpr auto leftMap(F const& leftCase) const& -> Either<decltype(leftCase( isCopyable(leftValue, rightValue) )), R> {
-    using NextEither = Either<decltype(leftCase(leftValue)), R>;
+  template<class F, class L2=L, class R2=R>
+  constexpr auto leftMap(F const& leftCase) const& 
+  -> Either<decltype(leftCase( isCopyable((L2)leftValue, (R2)rightValue) )), R2> {
+    using NextEither = Either<decltype(leftCase(leftValue)), R2>;
     return isLeft ?
       NextEither::leftOf( leftCase( leftValue ) ) :
       NextEither::rightOf( rightValue );
   }
 
-  template<class F>
-  auto leftMap(F const& leftCase)&& -> Either<decltype(leftCase(std::move(leftValue))), R> {
-    using NextEither = Either<decltype(leftCase(std::move(leftValue))), R>;
+  template<class F, class L2=L, class R2=R>
+  auto leftMap(F const& leftCase)&& -> Either<decltype(leftCase(std::move(leftValue))), R2> {
+    using NextEither = Either<decltype(leftCase(std::move(leftValue))), R2>;
     return isLeft ?
       NextEither::leftOf(leftCase(std::move(leftValue))) :
       NextEither::rightOf( std::move(rightValue) );
   }
 
-  template<class F>
-  constexpr auto rightMap(F const& rightCase) const& -> Either<L, decltype(rightCase(isCopyable(rightValue, leftValue)))> {
+  template<class F, class L2=L, class R2=R>
+  constexpr auto rightMap(F const& rightCase) const& -> Either<L, decltype(rightCase(isCopyable((R2)rightValue, (L2)leftValue)))> {
     using NextEither = Either<L, decltype(rightCase(rightValue))>;
     return isLeft ?
       NextEither::leftOf( leftValue ) :
       NextEither::rightOf( rightCase( rightValue ) );
   }
 
-  template<class F>
-  auto rightMap(F const& rightCase)&& -> Either<L, decltype(rightCase(std::move(rightValue)))> {
+  template<class F, class L2=L, class R2=R>
+  auto rightMap(F const& rightCase)&& -> Either<L2, decltype(rightCase(std::move((R2)rightValue)))> {
     using NextEither = Either<L, decltype(rightCase(std::move(rightValue)))>;
     return isLeft ?
       NextEither::leftOf( std::move(leftValue) ) :
       NextEither::rightOf( rightCase( std::move(rightValue) ) );
   }
 
-  template<class LeftCase>
+  template<class LeftCase, class L2=L, class R2=R>
   constexpr auto leftFlatMap(LeftCase const& leftCase) const&
-    -> decltype( ensureEitherRight(leftCase(isCopyable(leftValue)), isCopyable(rightValue))) {
+    -> decltype( ensureEitherRight(leftCase(isCopyable((L2)leftValue)), isCopyable((R2)rightValue))) {
     using NextEither = decltype(leftCase(leftValue));
 
     if (!*this) {
@@ -204,9 +205,9 @@ struct Either {
     return NextEither::rightOf(rightValue);
   }
 
-  template<class RightCase>
+  template<class RightCase, class L2=L, class R2=R>
   constexpr auto rightFlatMap(RightCase const& rightCase) const&
-    -> decltype( ensureEitherLeft(rightCase(isCopyable(rightValue)), isCopyable(leftValue))) {
+    -> decltype( ensureEitherLeft(rightCase(isCopyable((R2)rightValue)), isCopyable((L2)leftValue))) {
     using NextEither = decltype(rightCase(rightValue));
 
     if (*this) {
@@ -218,7 +219,7 @@ struct Either {
 
 
 
-  template<class LeftCase>
+  template<class LeftCase, class L2=L, class R2=R>
   auto leftFlatMap(LeftCase const& leftCase)&&
     -> decltype( ensureEitherRight(leftCase(std::move(leftValue)), std::move(rightValue))) {
     using NextEither = decltype(leftCase(std::move(leftValue)));
@@ -230,7 +231,7 @@ struct Either {
     return NextEither::rightOf(std::move(rightValue));
   }
 
-  template<class RightCase>
+  template<class RightCase, class L2=L, class R2=R>
   auto rightFlatMap(RightCase const& rightCase)&&
     -> decltype( ensureEitherLeft(rightCase(std::move(rightValue)), std::move(leftValue))) {
     using NextEither = decltype(rightCase(std::move(rightValue)));
