@@ -9,7 +9,9 @@ cxx_library(
 
 cxx_test(
   name = 'test',
-  deps = [':neither'],
+  deps = [
+    ':neither'
+  ],
   srcs = glob([
     'neither/tests/**/*.cpp',
   ]),

@@ -81,13 +81,13 @@ TEST(neither, constructFromUnique) {
 TEST(neither, flatMapToUnique) {
   neither::Either<int, int> e = left(1);
 
-  auto i = e.leftFlatMap([](auto x){ return
-    Either<std::unique_ptr<int>, int>::leftOf(
+  auto i = e.leftFlatMap([](auto x) {
+    return Either<std::unique_ptr<int>, int>::leftOf(
       std::make_unique<int>(x));
-  }).leftFlatMap([](auto&& x){ return
-    Either<std::unique_ptr<int>, int>::leftOf(
+  }).leftFlatMap([](auto&& x) {
+    return Either<std::unique_ptr<int>, int>::leftOf(
       std::make_unique<int>(1));
-  }).leftMap([](auto&& x){
+  }).leftMap([](auto&& x) {
     return *x;
   }).join();
 
@@ -98,16 +98,15 @@ TEST(neither, flatMapToUnique) {
 TEST(neither, mapToUnique) {
   neither::Either<int, int> e = left(1);
 
-  auto u = e.leftFlatMap([](auto x){ return
+  auto u = e.leftFlatMap([](auto x) { return
     Either<std::unique_ptr<int>, int>::leftOf(
       std::make_unique<int>(x));
-  }).leftMap([](auto&& x){
+  }).leftMap([](auto&& x) {
     return std::move(x);
-  }).rightFlatMap([](auto&& x){ return
-    Either<std::unique_ptr<int>, std::unique_ptr<int>>::rightOf(
+  }).rightFlatMap([](auto&& x) {
+    return Either<std::unique_ptr<int>, std::unique_ptr<int>>::rightOf(
       std::make_unique<int>(2));
   }).join();
 
   ASSERT_TRUE(*u == 1);
 }
-

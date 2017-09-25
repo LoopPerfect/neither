@@ -1,2 +1,6 @@
+[project]
+  ignore = .git, .buckd
+
 [cxx]
+  cxxflags = -std=c++14
   gtest_dep = google.gtest//:gtest
