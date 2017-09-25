@@ -4,15 +4,20 @@ cxx_library(
   exported_headers = subdir_glob([
     ('neither/include', '**/*.hpp'),
   ]),
-  visibility = ['PUBLIC']
+  visibility = [
+    'PUBLIC',
+  ],
 )
 
 cxx_test(
   name = 'test',
-  deps = [
-    ':neither'
-  ],
   srcs = glob([
     'neither/tests/**/*.cpp',
   ]),
+  platform_compiler_flags = [
+    ('^linux.*', [ '-lpthread' ]),
+  ],
+  deps = [
+    ':neither',
+  ],
 )
