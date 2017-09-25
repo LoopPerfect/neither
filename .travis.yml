@@ -10,6 +10,7 @@ addons:
       - gcc-5
 
 before_install:
+  - ls /usr/bin/
   - cd /usr/bin/ && sudo rm g++ && sudo ln -s g++-5 g++
   - g++ --version
   - sudo apt-get install default-jdk
