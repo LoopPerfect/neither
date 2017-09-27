@@ -1,4 +1,5 @@
 #include <iostream>
+#include <neither/neither.hpp>
 #include <string>
 #include <memory>
 
@@ -110,26 +111,4 @@ TEST(neither, either_mapToUnique) {
   }).join();
 
   ASSERT_TRUE(*u == 1);
-}
-
-TEST(neither, either_comparison) {
-
-  auto a = IntOrStr::leftOf(123);
-  auto b = IntOrStr::leftOf(123);
-
-  EXPECT_TRUE(a == b);
-
-  auto c = IntOrStr::rightOf("abc");
-  auto d = IntOrStr::rightOf("abc");
-  auto e = IntOrStr::rightOf("def");
-
-  EXPECT_TRUE(c == d);
-
-  EXPECT_TRUE(a != c);
-  EXPECT_TRUE(a != d);
-  EXPECT_TRUE(b != c);
-  EXPECT_TRUE(b != d);
-
-  EXPECT_TRUE(c != e);
-  EXPECT_TRUE(d != e);
 }

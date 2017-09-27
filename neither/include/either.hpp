@@ -3,6 +3,8 @@
 
 #include <memory>
 #include <type_traits>
+#include <neither/traits.hpp>
+#include <neither/maybe.hpp>
 
 #include <neither/traits.hpp>
 #include <neither/maybe.hpp>
