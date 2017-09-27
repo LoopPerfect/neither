@@ -5,7 +5,7 @@ cxx_library(
     ('neither/include', '**/*.hpp'),
   ]),
   visibility = [
-    'PUBLIC'
+    'PUBLIC',
   ],
 )
 
@@ -14,6 +14,9 @@ cxx_test(
   srcs = glob([
     'neither/tests/**/*.cpp',
   ]),
+  platform_compiler_flags = [
+    ('^linux.*', [ '-lpthread' ]),
+  ],
   deps = [
     ':neither',
   ],

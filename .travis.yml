@@ -1,0 +1,25 @@
+language: cpp
+sudo: true
+dist: trusty
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-5
+
+before_install:
+  - cd /usr/bin/ && sudo rm g++ && sudo ln -s g++-5 g++ && cd -
+  - g++ --version
+  - sudo apt-get install default-jdk
+  - wget -O buck.deb https://github.com/facebook/buck/releases/download/v2017.09.04.02/buck-2017.09.04.02_all.deb
+  - sudo dpkg -i buck.deb
+  - wget -O buckaroo.deb https://github.com/LoopPerfect/buckaroo/releases/download/v1.3.1/buckaroo_1.3.1_amd64.deb
+  - sudo dpkg -i buckaroo.deb
+
+script:
+  - buckaroo install
+  - buck build //:neither
+  - buck build //:test#linux-x86_64
+  - buck run //:test#linux-x86_64
