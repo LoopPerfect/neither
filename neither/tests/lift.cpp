@@ -1,5 +1,4 @@
-#include <neither/either.hpp>
-#include <neither/lift.hpp>
+#include <neither/neither.hpp>
 #include <gtest/gtest.h>
 
 TEST(neither, lift_maybes) {
@@ -22,5 +21,3 @@ TEST(neither, lift_maybes) {
   ASSERT_TRUE(sum1.hasValue && sum1.value == 12);
   ASSERT_TRUE(!sum2.hasValue);
 }
-
-

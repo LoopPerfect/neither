@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <iostream>
-#include <neither/either.hpp>
+#include <neither/neither.hpp>
 #include <string>
 #include <memory>
 
@@ -110,4 +110,3 @@ TEST(neither, mapToUnique) {
 
   ASSERT_TRUE(*u == 1);
 }
-

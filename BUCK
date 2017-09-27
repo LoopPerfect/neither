@@ -4,13 +4,17 @@ cxx_library(
   exported_headers = subdir_glob([
     ('neither/include', '**/*.hpp'),
   ]),
-  visibility = ['PUBLIC']
+  visibility = [
+    'PUBLIC'
+  ],
 )
 
 cxx_test(
   name = 'test',
-  deps = [':neither'],
   srcs = glob([
     'neither/tests/**/*.cpp',
   ]),
+  deps = [
+    ':neither',
+  ],
 )

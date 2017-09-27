@@ -1,10 +1,10 @@
 #ifndef NEITHER_EITHER_HPP
 #define NEITHER_EITHER_HPP
 
-#include <neither/traits.hpp>
-#include <neither/maybe.hpp>
 #include <memory>
 #include <type_traits>
+#include <neither/traits.hpp>
+#include <neither/maybe.hpp>
 
 namespace neither {
 

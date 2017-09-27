@@ -1,8 +1,8 @@
 #ifndef NEITHER_MAYBE_HPP
 #define NEITHER_MAYBE_HPP
 
-#include <neither/traits.hpp>
 #include <memory>
+#include <neither/traits.hpp>
 
 namespace neither {
 

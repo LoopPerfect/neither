@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <neither/maybe.hpp>
+#include <neither/neither.hpp>
 
 using namespace neither;
 
