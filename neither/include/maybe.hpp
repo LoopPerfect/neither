@@ -1,9 +1,9 @@
 #ifndef NEITHER_MAYBE_HPP
 #define NEITHER_MAYBE_HPP
 
-#include <neither/traits.hpp>
 #include <memory>
 #include <cassert>
+#include <neither/traits.hpp>
 
 namespace neither {
 
@@ -16,6 +16,7 @@ template <class T> struct Maybe {
   union {
     T value;
   };
+
   bool const hasValue = 0;
 
   constexpr Maybe() : hasValue{0} {}
@@ -89,12 +90,28 @@ template <class T> struct Maybe {
     return f(std::move(value));
   }
 
-  constexpr operator bool()const { return hasValue; }
+  constexpr operator bool() const { return hasValue; }
 };
 
-template <class T> auto maybe(T value) -> Maybe<T> { return {value}; }
+template <typename T>
+auto maybe(T value) -> Maybe<T> { return {value}; }
 
-template <class T = void> auto maybe() -> Maybe<T> { return {}; }
+template <typename T = void>
+auto maybe() -> Maybe<T> { return {}; }
+
+template <typename T>
+bool operator == (Maybe<T> const& a, Maybe<T> const& b) {
+  if (a.hasValue) {
+    return b.hasValue && a.value == b.value;
+  }
+  return !b.hasValue;
+}
+
+template <typename T>
+bool operator != (Maybe<T> const& a, Maybe<T> const& b) {
+  return !(a == b);
+}
+
 }
 
 #endif

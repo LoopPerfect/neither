@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
-#include <neither/either.hpp>
-#include <neither/try.hpp>
+#include <neither/neither.hpp>
 
 TEST(neither, try_and_fail) {
 
