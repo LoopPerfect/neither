@@ -21,6 +21,7 @@ cxx_test(
   platform_linker_flags = [
     ('^linux.*', [ '-lpthread', ]),
   ],
+  link_style = 'shared',
   deps = [
     ':neither',
   ],
