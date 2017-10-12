@@ -4,14 +4,16 @@
 
 A functional implementation of Either in C++14.
 
+[![Travis](https://img.shields.io/travis/LoopPerfect/neither.svg)](https://travis-ci.org/LoopPerfect/neither) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/LoopPerfect/neither/master/license)
+
 ```
 buckaroo install loopperfect/neither
 ```
 
-## Introductory Example
+## Examples
 
 
-### Handling Unsafe code
+### Handling Unsafe Code
 ```c++
 
 auto unsafe = [] { // a function that throws, sometimes we can't avoid it...
@@ -37,7 +39,8 @@ ASSERT_TRUE(result == 42);
 
 ```
 
-### Another Either Example
+### Another Example
+
 ```c++
 Either<std::string, int> compute(int x) {
   if(x<0) return left("don't pass x<0");
@@ -79,6 +82,7 @@ void compose() {
 ```
 
 ### Maybe Example
+
 ```c++
 
 Maybe<float> compute(float x) {
@@ -112,6 +116,7 @@ ASSERT_TRUE( monadicSum( maybe(), maybe(1) ).hasValue == false);
 ```
 
 ## Why Eithers? - Learned Lessons About Error handling
+
 Some useful references: 
 
  - Benchmarks: [Mongrel Monads, Dirty, Dirty, Dirty - Niall Douglas [ACCU 2017]](https://youtu.be/XVofgKH-uu4?t=1h)
