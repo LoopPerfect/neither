@@ -1,11 +1,15 @@
-cxx_library(
+prebuilt_cxx_library(
   name = 'neither',
+  header_only = True,
   header_namespace = 'neither',
   exported_headers = subdir_glob([
     ('neither/include', '**/*.hpp'),
   ]),
+  licenses = [
+    'LICENSE.txt',
+  ],
   visibility = [
-    'PUBLIC',
+    'PUBLIC'
   ],
 )
 
@@ -14,9 +18,10 @@ cxx_test(
   srcs = glob([
     'neither/tests/**/*.cpp',
   ]),
-  platform_compiler_flags = [
-    ('^linux.*', [ '-lpthread' ]),
+  platform_linker_flags = [
+    ('^linux.*', [ '-lpthread', ]),
   ],
+  link_style = 'shared',
   deps = [
     ':neither',
   ],

@@ -2,6 +2,7 @@
 #define NEITHER_MAYBE_HPP
 
 #include <memory>
+#include <cassert>
 #include <neither/traits.hpp>
 
 namespace neither {
@@ -38,9 +39,12 @@ template <class T> struct Maybe {
   }
 
   constexpr T get(T defaultValue) {
-    if (hasValue)
-      return value;
-    return defaultValue;
+    return hasValue ? value : defaultValue;
+  }
+
+  constexpr T unsafeGet() {
+    assert(hasValue && "unsafeGet must not be called on an empty Maybe");
+    return value;
   }
 
   template<class F>
