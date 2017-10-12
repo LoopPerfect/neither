@@ -27,3 +27,8 @@ TEST(neither, maybe_flatMap_no_value) {
   auto x = maybe<int>(42);
   ASSERT_TRUE(x.flatMap([](auto x) { return maybe<int>(); }).get(1) == 1);
 }
+
+TEST(neither, maybe_unsafe_get_with_value) {
+  auto x = maybe<int>(42);
+  ASSERT_TRUE(x.unsafeGet() == 42);
+}
