@@ -1,5 +1,3 @@
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/hq7GXSxnYW3qEM98fqMVob9v/LoopPerfect/neither'>  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/hq7GXSxnYW3qEM98fqMVob9v/LoopPerfect/neither.svg' /></a>
-
 # neither
 
 A functional implementation of Either in C++14.
@@ -155,5 +153,3 @@ Alternatively you can copy & paste the headers to your include path:
 ```
 cp neither/include/*.hpp $InstallPath/include/neither
 ```
-
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/hq7GXSxnYW3qEM98fqMVob9v/LoopPerfect/neither'>  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/hq7GXSxnYW3qEM98fqMVob9v/LoopPerfect/neither.svg' /></a>
