@@ -53,3 +53,12 @@ TEST(neither, maybe_comparison) {
   EXPECT_TRUE(d == d);
   EXPECT_TRUE(d == e);
 }
+
+TEST(neither, maybe_size) {
+  
+  auto none = maybe<int>();
+  auto some = maybe<int>(1);
+
+  EXPECT_EQ(none.size(), 0);
+  EXPECT_EQ(some.size(), 1);
+}
