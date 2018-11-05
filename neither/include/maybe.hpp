@@ -52,6 +52,8 @@ template <class T> struct Maybe {
 
   constexpr size_type size() const noexcept { return hasValue ? 1: 0; }
   
+  constexpr bool empty() const noexcept { return !hasValue; }
+  
   template<class F>
     constexpr auto map(F const &f) const&
     -> Maybe<decltype(f(isCopyable(value)))> {

@@ -62,3 +62,12 @@ TEST(neither, maybe_size) {
   EXPECT_EQ(none.size(), 0);
   EXPECT_EQ(some.size(), 1);
 }
+
+TEST(neither, maybe_empty) {
+  
+  auto none = maybe<int>();
+  auto some = maybe<int>(1);
+
+  EXPECT_TRUE(none.empty());
+  EXPECT_FALSE(some.empty());
+}
