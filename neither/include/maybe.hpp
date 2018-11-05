@@ -17,14 +17,14 @@ template <class T> struct Maybe {
     T value;
   };
 
-  bool const hasValue = 0;
+  bool const hasValue;
 
-  constexpr Maybe() : hasValue{0} {}
+  constexpr Maybe() : hasValue{false} {}
 
-  constexpr Maybe(T const& value) :  value{value}, hasValue{1} {}
-  constexpr Maybe(T&& value) :  value{std::move(value)}, hasValue{1} {}
+  constexpr Maybe(T const& value) :  value{value}, hasValue{true} {}
+  constexpr Maybe(T&& value) :  value{std::move(value)}, hasValue{true} {}
 
-  constexpr Maybe(Maybe<void>) : hasValue{0} {}
+  constexpr Maybe(Maybe<void>) : hasValue{false} {}
 
   constexpr Maybe(Maybe<T> const &o) : hasValue{o.hasValue} {
     if (o.hasValue) {
