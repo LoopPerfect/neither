@@ -1,4 +1,5 @@
 [project]
+  should_remap_host_platform = true
   ignore = .git, .buckd
 
 [cxx]
