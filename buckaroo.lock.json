@@ -6,8 +6,8 @@
       "subPath": "googletest-ec44c6c1675c25b9827aacd08c02433cccde7780"
     },
     "buck": {
-      "url": "https://raw.githubusercontent.com/nikhedonia/googletest/665327f0141d4a4fc4f2496e781dce436d742645/BUCK",
-      "sha256": "d976069f5b47fd8fc57201f47026a70dee4e47b3141ac23567b8a0c56bf9288c"
+      "url": "https://raw.githubusercontent.com/buckaroo-pm/google-googletest/8d62cdaa27d589789d6de0a2d507ded8f7946969/BUCK",
+      "sha256": "abda4caaaf855e192efddd066df0440228f35296811e4f76abf6c424d2b33f84"
     }
   }
 }

@@ -1,7 +1,10 @@
 [project]
-  should_remap_host_platform = true
   ignore = .git, .buckd
 
 [cxx]
-  cxxflags = -std=c++14
   gtest_dep = google.gtest//:gtest
+  cxxflags = -std=c++14
+  should_remap_host_platform = true
+
+[repositories]
+  google.gtest = buckaroo/official/google/gtest
