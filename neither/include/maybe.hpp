@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <cassert>
+#include <cstddef>
 #include <neither/traits.hpp>
 
 namespace neither {
@@ -13,18 +14,20 @@ template <> struct Maybe<void> {};
 
 template <class T> struct Maybe {
 
+  using size_type = std::size_t;
+
   union {
     T value;
   };
 
-  bool const hasValue = 0;
+  bool const hasValue;
 
-  constexpr Maybe() : hasValue{0} {}
+  constexpr Maybe() : hasValue{false} {}
 
-  constexpr Maybe(T const& value) :  value{value}, hasValue{1} {}
-  constexpr Maybe(T&& value) :  value{std::move(value)}, hasValue{1} {}
+  constexpr Maybe(T const& value) :  value{value}, hasValue{true} {}
+  constexpr Maybe(T&& value) :  value{std::move(value)}, hasValue{true} {}
 
-  constexpr Maybe(Maybe<void>) : hasValue{0} {}
+  constexpr Maybe(Maybe<void>) : hasValue{false} {}
 
   constexpr Maybe(Maybe<T> const &o) : hasValue{o.hasValue} {
     if (o.hasValue) {
@@ -47,6 +50,10 @@ template <class T> struct Maybe {
     return value;
   }
 
+  constexpr size_type size() const noexcept { return hasValue ? 1: 0; }
+  
+  constexpr bool empty() const noexcept { return !hasValue; }
+  
   template<class F>
     constexpr auto map(F const &f) const&
     -> Maybe<decltype(f(isCopyable(value)))> {
