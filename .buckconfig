@@ -7,4 +7,4 @@
   should_remap_host_platform = true
 
 [repositories]
-  google.gtest = buckaroo/official/google/gtest
+  google.gtest = external/google-googletest

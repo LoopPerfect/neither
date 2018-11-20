@@ -18,10 +18,6 @@ cxx_test(
   srcs = glob([
     'neither/tests/**/*.cpp',
   ]),
-  platform_linker_flags = [
-    ('^linux.*', [ '-lpthread', ]),
-  ],
-  link_style = 'shared',
   deps = [
     ':neither',
   ],

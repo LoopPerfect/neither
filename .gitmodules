@@ -1,0 +1,3 @@
+[submodule "external/google-googletest"]
+	path = external/google-googletest
+	url = https://github.com/buckaroo-pm/google-googletest.git
