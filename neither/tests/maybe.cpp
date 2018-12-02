@@ -55,7 +55,7 @@ TEST(neither, maybe_comparison) {
 }
 
 TEST(neither, maybe_size) {
-  
+
   auto none = maybe<int>();
   auto some = maybe<int>(1);
 
@@ -64,10 +64,18 @@ TEST(neither, maybe_size) {
 }
 
 TEST(neither, maybe_empty) {
-  
+
   auto none = maybe<int>();
   auto some = maybe<int>(1);
 
   EXPECT_TRUE(none.empty());
   EXPECT_FALSE(some.empty());
+}
+
+TEST(neither, maybe_none) {
+  auto none1 = none;
+  auto none2 = none;
+
+  EXPECT_TRUE(none1 == none2);
+  EXPECT_FALSE(none1 != none2);
 }
