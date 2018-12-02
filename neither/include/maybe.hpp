@@ -109,18 +109,17 @@ auto maybe() -> Maybe<T> { return {}; }
 
 namespace {
 
-    template<typename T, typename std::enable_if_t<!std::is_void<T>::value>* = nullptr>
-    bool equal(Maybe<T> const &a, Maybe<T> const &b) {
-        if (a.hasValue) {
-            return b.hasValue && a.value == b.value;
-        }
-        return !b.hasValue;
-    }
+  bool equal(Maybe<void> const&, Maybe<void> const&) {
+    return true;
+  }
 
-    template <typename T, typename std::enable_if_t<std::is_void<T>::value>* = nullptr>
-    bool equal(Maybe<T> const&, Maybe<T> const&) {
-        return true;
+  template <typename T>
+  bool equal(Maybe<T> const &a, Maybe<T> const &b) {
+    if (a.hasValue) {
+      return b.hasValue && a.value == b.value;
     }
+    return !b.hasValue;
+  }
 }
 
 template <typename T>
