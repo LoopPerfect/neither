@@ -58,22 +58,22 @@ struct Either {
   bool const isLeft = 0;
 
   constexpr Either( Left<L> const& l )
-    : leftValue{l.value}
+    : leftValue(l.value)
     , isLeft(1)
   {}
 
   constexpr Either( Right<R> const& r )
-    : rightValue{r.value}
+    : rightValue(r.value)
     , isLeft(0)
   {}
 
   Either(Left<L> && l )
-    : leftValue{std::move(l.value)}
+    : leftValue(std::move(l.value))
     , isLeft(1)
   {}
 
   Either( Right<R> && r )
-    : rightValue{std::move(r.value)}
+    : rightValue(std::move(r.value))
     , isLeft(0)
   {}
 
@@ -116,19 +116,19 @@ struct Either {
   }
 
   static constexpr auto leftOf( L const& l ) {
-    return Either<L, R>{ neither::left(l) };
+    return Either<L, R>( neither::left(l) );
   }
 
   static constexpr auto rightOf( R const& r ) {
-    return Either<L, R>{ neither::right(r) };
+    return Either<L, R>( neither::right(r) );
   }
 
   static constexpr auto leftOf( L && l ) {
-    return Either<L, R>{ neither::left(std::move(l)) };
+    return Either<L, R>( neither::left(std::move(l)) );
   }
 
   static constexpr auto rightOf( R && r ) {
-    return Either<L, R>{ neither::right(std::move(r)) };
+    return Either<L, R>( neither::right(std::move(r)) );
   }
 
   template<
