@@ -2,4 +2,8 @@ buckaroo
 buck-out
 .buckd
 .buckconfig.local
+.buckconfig.d
 BUCKAROO_DEPS
+buckaroo_macros.bzl
+buckaroo-linux
+buckaroo-macos

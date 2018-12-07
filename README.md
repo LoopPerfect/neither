@@ -5,7 +5,7 @@ A functional implementation of Either in C++14.
 [![Travis](https://img.shields.io/travis/LoopPerfect/neither.svg)](https://travis-ci.org/LoopPerfect/neither) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/LoopPerfect/neither/master/license)
 
 ```
-buckaroo install loopperfect/neither
+buckaroo add github.com/LoopPerfect/neither
 ```
 
 ## Examples
