@@ -109,6 +109,7 @@ auto maybe() -> Maybe<T> { return {}; }
 
 namespace {
 
+  inline
   bool equal(Maybe<void> const&, Maybe<void> const&) {
     return true;
   }
