@@ -182,7 +182,7 @@ struct Either {
   }
 
   template<class F, class L2=L, class R2=R>
-  auto rightMap(F const& rightCase)&& -> Either<L2, decltype(rightCase(std::move((R2)rightValue)))> {
+  auto rightMap(F const& rightCase)&& -> Either<L2, decltype(rightCase(std::move(rightValue)))> {
     using NextEither = Either<L, decltype(rightCase(std::move(rightValue)))>;
     return isLeft ?
       NextEither::leftOf( std::move(leftValue) ) :
