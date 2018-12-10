@@ -97,7 +97,7 @@ TEST(neither, either_flatMapToUnique) {
 }
 
 
-TEST(neither, either_mapToUnique) {
+TEST(neither, either_leftMapToUnique) {
   neither::Either<int, int> e = left(1);
 
   auto u = e.leftFlatMap([](auto x) { return
@@ -107,6 +107,23 @@ TEST(neither, either_mapToUnique) {
     return std::move(x);
   }).rightFlatMap([](auto&& x) {
     return Either<std::unique_ptr<int>, std::unique_ptr<int>>::rightOf(
+      std::make_unique<int>(2));
+  }).join();
+
+  ASSERT_TRUE(*u == 1);
+}
+
+
+TEST(neither, either_rightMapToUnique) {
+  neither::Either<int, int> e = right(1);
+
+  auto u = e.rightFlatMap([](auto x) { return
+    Either<int, std::unique_ptr<int>>::rightOf(
+      std::make_unique<int>(x));
+  }).rightMap([](auto&& x) {
+    return std::move(x);
+  }).leftFlatMap([](auto&& x) {
+    return Either<std::unique_ptr<int>, std::unique_ptr<int>>::leftOf(
       std::make_unique<int>(2));
   }).join();
 
