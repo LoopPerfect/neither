@@ -9,3 +9,6 @@
 
 [cxx#linux-x86_64]
   cxxflags = -std=c++14
+
+[cxx#macosx-x86_64]
+  cxxflags = -std=c++14
