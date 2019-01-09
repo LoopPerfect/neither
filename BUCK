@@ -1,3 +1,6 @@
+load('//:subdir_glob.bzl', 'subdir_glob')
+load('//:buckaroo_macros.bzl', 'buckaroo_deps_from_package')
+
 prebuilt_cxx_library(
   name = 'neither',
   header_only = True,
@@ -18,7 +21,8 @@ cxx_test(
   srcs = glob([
     'neither/tests/**/*.cpp',
   ]),
-  deps = [
-    ':neither',
-  ],
+  deps = buckaroo_deps_from_package('github.com/buckaroo-pm/google-googletest') + \
+    [
+      ':neither',
+    ],
 )

@@ -9,22 +9,25 @@ addons:
     packages:
       - g++-6
       - gcc-6
+  homebrew:
+    taps:
+      - facebook/fb
+    packages:
+      - buck
+
+os:
+  - linux
+  - osx
+
+env:
+  - BUCKAROO_VERSION=buckaroo-redux-alpha-8
+
+osx_image: xcode9.3
 
 before_install:
-- sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
-- sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 90
-- sudo apt-get install -y equivs openjdk-8-jdk
-- wget -O buck.deb https://github.com/facebook/buck/releases/download/v2018.08.27.01/buck.2018.08.27.01_all.deb
-- sudo dpkg -i buck.deb
-- buck --version
-- wget -O buckaroo.deb https://github.com/LoopPerfect/buckaroo/releases/download/v1.4.1/buckaroo.deb
-- sudo dpkg -i buckaroo.deb
-- buckaroo version
-- c++ --version
-- g++ --version
-- gcc --version
+  - ./travis/before-install-$TRAVIS_OS_NAME.sh
 
 script:
-- buckaroo install
-- buck build :neither
-- buck test :test
+  - ./buckaroo-client install
+  - buck build -c ui.superconsole=DISABLED :neither
+  - buck test -c ui.superconsole=DISABLED //...

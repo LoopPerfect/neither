@@ -1,10 +1,14 @@
 [project]
   ignore = .git, .buckd
 
+[parser]
+  default_build_file_syntax = SKYLARK
+
 [cxx]
-  gtest_dep = google.gtest//:gtest
-  cxxflags = -std=c++14
   should_remap_host_platform = true
 
-[repositories]
-  google.gtest = external/google-googletest
+[cxx#linux-x86_64]
+  cxxflags = -std=c++14
+
+[cxx#macosx-x86_64]
+  cxxflags = -std=c++14
