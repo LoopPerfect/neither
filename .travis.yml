@@ -29,5 +29,5 @@ before_install:
 
 script:
   - ./buckaroo-client install
-  - buck build :neither
-  - buck test //...
+  - buck build -c ui.superconsole=DISABLED :neither
+  - buck test -c ui.superconsole=DISABLED //...
