@@ -136,7 +136,7 @@ Some useful references:
   - annotating function signatures with `throw` and `noexcept` is not helpful;
     contract breaches are not detected in compile-time but call `std::terminate` in run-time
   - handling exceptions is error prone and requires documentation
-  - => encode errors in the types to enforce propper handling by the API consumer
+  - => encode errors in the types to enforce proper handling by the API consumer
 
 ## Installation
 
