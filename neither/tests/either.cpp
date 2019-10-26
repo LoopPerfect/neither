@@ -133,22 +133,22 @@ TEST(neither, either_rightMapToUnique) {
 
 TEST(neither, either_leftMapFromStoredUnique)
 {
-  neither::Either<std::unique_ptr<int>, std::unique_ptr<int>> e = left(std::make_unique<int>(1));
+  PtrOrPtr e = left(std::make_unique<int>(1));
   auto u = e.leftMap([](auto x){
     return(std::move(x));
   }).join();
 
-  ASSERT_TRUE(*u == 1);
+  ASSERT_EQ(*u, 1);
 }
 
 TEST(neither, either_rightMapFromStoredUnique)
 {
-  neither::Either<std::unique_ptr<int>, std::unique_ptr<int>> e = right(std::make_unique<int>(1));
+  PtrOrPtr e = right(std::make_unique<int>(1));
   auto u = e.rightMap([](auto x){
     return(std::move(x));
   }).join();
 
-  ASSERT_TRUE(*u == 1);
+  ASSERT_EQ(*u, 1);
 }
 
 TEST(neither, either_leftMapOfConst)
@@ -212,7 +212,7 @@ TEST(neither, either_leftFlatMapFromStoredUnique)
     return PtrOrPtr::leftOf(std::make_unique<int>(0));
   }).join();
 
-  ASSERT_TRUE(*u == 0);
+  ASSERT_EQ(*u, 0);
 }
 
 TEST(neither, either_rightFlatMapFromStoredUnique)
@@ -222,7 +222,7 @@ TEST(neither, either_rightFlatMapFromStoredUnique)
     return PtrOrPtr::leftOf(std::make_unique<int>(0));
   }).join();
 
-  ASSERT_TRUE(*u == 0);
+  ASSERT_EQ(*u, 0);
 }
 
 TEST(neither, either_joinFromStoredUnique)
