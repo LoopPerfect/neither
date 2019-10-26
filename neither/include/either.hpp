@@ -166,6 +166,14 @@ struct Either {
     return isLeft ? leftCase( leftValue ) : rightCase( rightValue );
   }
 
+  template<class LeftF, class RightF,
+    typename std::enable_if<!(sizeof(LeftF), std::is_copy_constructible<L>::value && std::is_copy_constructible<R>::value), int>::type = 0
+  >
+  constexpr auto join(LeftF const& leftCase, RightF const&  rightCase)&
+    -> decltype( isLeft? leftCase(std::move(leftValue)) : rightCase(std::move(rightValue)) ){
+    return isLeft ? leftCase(std::move(leftValue)) : rightCase(std::move(rightValue));
+  }
+
   template<class F, class L2=L, class R2=R>
   constexpr auto leftMap(F const& leftCase) const&
   -> Either<decltype(leftCase( isCopyable((L2)leftValue, (R2)rightValue) )), R2> {

@@ -224,21 +224,21 @@ TEST(neither, either_rightFlatMapFromStoredUnique)
 
   ASSERT_TRUE(*u == 0);
 }
-/*
+
 TEST(neither, either_joinFromStoredUnique)
 {
   PtrOrPtr e = right(std::make_unique<int>(1));
   auto u = e.join(
     [](auto left){
-      return(std::move(left));
+      return left;
     },
     [](auto right){
-      return(std::move(right));
+      return right;
     }
   );
 
   ASSERT_EQ(*u, 1);
-}*/
+}
 
 TEST(neither, either_joinFromStoredUniqueNoFunction)
 {
