@@ -12,6 +12,7 @@ using namespace std::literals::string_literals;
 using IntOrStr = Either<int, std::string>;
 using StrOrInt = Either<std::string, int>;
 using StrOrStr = Either<std::string, std::string>;
+using PtrOrPtr = neither::Either<std::unique_ptr<int>, std::unique_ptr<int>>;
 
 TEST(neither, either_join_left) {
 
@@ -128,4 +129,121 @@ TEST(neither, either_rightMapToUnique) {
   }).join();
 
   ASSERT_TRUE(*u == 1);
+}
+
+TEST(neither, either_leftMapFromStoredUnique)
+{
+  PtrOrPtr e = left(std::make_unique<int>(1));
+  auto u = e.leftMap([](auto x){
+    return(std::move(x));
+  }).join();
+
+  ASSERT_EQ(*u, 1);
+}
+
+TEST(neither, either_rightMapFromStoredUnique)
+{
+  PtrOrPtr e = right(std::make_unique<int>(1));
+  auto u = e.rightMap([](auto x){
+    return(std::move(x));
+  }).join();
+
+  ASSERT_EQ(*u, 1);
+}
+
+TEST(neither, either_leftMapOfConst)
+{
+  const auto e = IntOrStr::leftOf(1);
+  const auto f = e.leftMap([](auto x){return x;});
+  const auto ret = f.rightMap([](auto x){return 0;}).join();
+
+  ASSERT_EQ(ret, 1);
+}
+
+TEST(neither, either_rightMapOfConst)
+{
+  const auto e = IntOrStr::rightOf("Hello World!");
+  const auto f = e.leftMap([](auto x){return std::string("Bye World!");});
+  const auto ret = f.rightMap([](auto x){return x;}).join();
+
+  ASSERT_EQ(ret, "Hello World!");
+}
+
+TEST(neither, either_leftMapNotAltered)
+{
+  auto e = IntOrStr::leftOf(1);
+  e.leftMap([](auto x){return 3;});
+  const auto ret = e.rightMap([](auto right){return 0;}).join();
+
+  ASSERT_EQ(ret, 1);
+}
+
+TEST(neither, either_leftMapOfConstNotAltered)
+{
+  const auto e = IntOrStr::leftOf(1);
+  e.leftMap([](auto x){return 3;});
+  const auto ret = e.rightMap([](auto right){return 0;}).join();
+
+  ASSERT_EQ(ret, 1);
+}
+
+TEST(neither, either_rightMapNotAltered)
+{
+  auto e = IntOrStr::rightOf("Hello World!");
+  e.leftMap([](auto left){return "";});
+  const auto ret = e.leftMap([](auto x){return std::string("Bye World!");}).join();
+
+  ASSERT_EQ(ret, "Hello World!");
+}
+
+TEST(neither, either_rightMapOfConstNotAltered)
+{
+  const auto e = IntOrStr::rightOf("Hello World!");
+  e.leftMap([](auto left){return "";});
+  const auto ret = e.leftMap([](auto x){return std::string("Bye World!");}).join();
+
+  ASSERT_EQ(ret, "Hello World!");
+}
+
+TEST(neither, either_leftFlatMapFromStoredUnique)
+{
+  PtrOrPtr e = left(std::make_unique<int>(1));
+  auto u = e.leftFlatMap([](auto x){
+    return PtrOrPtr::leftOf(std::make_unique<int>(0));
+  }).join();
+
+  ASSERT_EQ(*u, 0);
+}
+
+TEST(neither, either_rightFlatMapFromStoredUnique)
+{
+  PtrOrPtr e = right(std::make_unique<int>(1));
+  auto u = e.rightFlatMap([](auto x){
+    return PtrOrPtr::leftOf(std::make_unique<int>(0));
+  }).join();
+
+  ASSERT_EQ(*u, 0);
+}
+
+TEST(neither, either_joinFromStoredUnique)
+{
+  PtrOrPtr e = right(std::make_unique<int>(1));
+  auto u = e.join(
+    [](auto left){
+      return left;
+    },
+    [](auto right){
+      return right;
+    }
+  );
+
+  ASSERT_EQ(*u, 1);
+}
+
+TEST(neither, either_joinFromStoredUniqueNoFunction)
+{
+  PtrOrPtr e = right(std::make_unique<int>(1));
+  auto u = e.join();
+
+  ASSERT_EQ(*u, 1);
 }
